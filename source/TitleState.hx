@@ -57,10 +57,10 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-        #if android
+		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		#end
-				
+
 		#if (polymod && !html5)
 		if (sys.FileSystem.exists('mods/')) {
 			var folders:Array<String> = [];
@@ -180,11 +180,14 @@ class TitleState extends MusicBeatState
 			// FlxG.sound.list.add(music);
 			// music.play();
 
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(4, 0, 0.85);
+			if(FlxG.sound.music == null) {
+				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+
+				FlxG.sound.music.fadeIn(4, 0, 0.7);
+			}
 		}
 
-		Conductor.changeBPM(204);
+		Conductor.changeBPM(102);
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -199,7 +202,7 @@ class TitleState extends MusicBeatState
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
-		logoBl.screenCenter(X);
+		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
 		swagShader = new ColorSwap();
@@ -217,7 +220,7 @@ class TitleState extends MusicBeatState
 			gfDance.animation.addByIndices('danceRight', 'psykaDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		}
 		gfDance.antialiasing = ClientPrefs.globalAntialiasing;
-		//add(gfDance);
+		add(gfDance);
 		gfDance.shader = swagShader.shader;
 		add(logoBl);
 		//logoBl.shader = swagShader.shader;
@@ -254,13 +257,12 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		logoSpr = new FlxSprite(0, FlxG.height * 0.4).loadGraphic(Paths.image('trollface'));
+		logoSpr = new FlxSprite(0, FlxG.height * 0.4).loadGraphic(Paths.image('titlelogo'));
 		add(logoSpr);
 		logoSpr.visible = false;
-		logoSpr.setGraphicSize(Std.int(logoSpr.width * 1));
+		logoSpr.setGraphicSize(Std.int(logoSpr.width * 0.55));
 		logoSpr.updateHitbox();
 		logoSpr.screenCenter(X);
-		logoSpr.y = 400;
 		logoSpr.antialiasing = ClientPrefs.globalAntialiasing;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
@@ -335,7 +337,7 @@ class TitleState extends MusicBeatState
 				if(titleText != null) titleText.animation.play('press');
 
 				FlxG.camera.flash(FlxColor.WHITE, 1);
-				FlxG.sound.play(Paths.sound('confirmMenuBell'), 0.7);
+				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 				transitioning = true;
 				// FlxG.sound.music.stop();
@@ -460,50 +462,57 @@ class TitleState extends MusicBeatState
 				gfDance.animation.play('danceLeft');
 		}
 
-		sickBeats++;
-		switch (sickBeats)
-		{
-		case 0:
-			deleteCoolText();
-		case 2:
-			createCoolText(['Troll Team']);
-		case 6:
-			addMoreText('Presents');
-			logoSpr.visible = true;
-		case 8:
-			deleteCoolText();
-			logoSpr.visible = false;
-		case 10:
-			createCoolText([curWacky[0]]);
-		case 14:
-			addMoreText(curWacky[1]);
-			addMoreText(curWacky[2]);
-		case 16:
-			curWacky = FlxG.random.getObject(getIntroTextShit());
-			deleteCoolText();
-		case 18:
-			createCoolText([curWacky[0]]);
-		case 22:
-			addMoreText(curWacky[1]);
-			addMoreText(curWacky[2]);
-		case 24:
-			curWacky = FlxG.random.getObject(getIntroTextShit());
-			deleteCoolText();
-		case 26:
-			createCoolText([curWacky[0]]);
-		case 30:
-			addMoreText(curWacky[1]);
-			addMoreText(curWacky[2]);
-		case 32:
-			deleteCoolText();
-		case 34:
-			addMoreText('We do');
-		case 36:
-			addMoreText('a little');
-		case 38:
-			addMoreText('trolling');
-		case 40:
-			skipIntro();
+		if(!closedState) {
+			sickBeats++;
+			switch (sickBeats)
+			{
+				case 1:
+					createCoolText(['Psych Engine by'], 45);
+				// credTextShit.visible = true;
+				case 3:
+					addMoreText('Shadow Mario', 45);
+					addMoreText('RiverOaken', 45);
+				// credTextShit.addText();
+				case 4:
+					deleteCoolText();
+				// credTextShit.visible = false;
+				// credTextShit.screenCenter();
+				case 5:
+					createCoolText(['lol amongus'], -60);
+				case 7:
+					addMoreText('si ves esto eres gay xd', -60);
+					logoSpr.visible = true;
+				// credTextShit.text += '\nNewgrounds is god';
+				case 8:
+					deleteCoolText();
+					logoSpr.visible = false;
+				// credTextShit.visible = false;
+
+				// credTextShit.text = 'Te amo alonso';
+				// credTextShit.screenCenter();
+				case 9:
+					createCoolText([UwU[0]]);
+				// credTextShit.visible = true;
+				case 11:
+					addMoreText(curWacky[1]);
+				// credTextShit.text += '\nlmao';
+				case 12:
+					deleteCoolText();
+				// credTextShit.visible = false;
+				// credTextShit.text = "Vs";
+				// credTextShit.screenCenter();
+				case 13:
+					addMoreText('Vs');
+				// credTextShit.visible = true;
+				case 14:
+					addMoreText('Jefferson');
+				// credTextShit.text += '\n13n';
+				case 15:
+					addMoreText('Full Ass'); // credTextShit.text += '\nFull Ass';
+
+				case 16:
+					skipIntro();
+			}
 		}
 	}
 
@@ -511,26 +520,12 @@ class TitleState extends MusicBeatState
 
 	function skipIntro():Void
 	{
-		Conductor.changeBPM(102);
 		if (!skippedIntro)
 		{
 			remove(logoSpr);
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
-
-			FlxTween.tween(logoBl,{y: -100}, 1.4, {ease: FlxEase.expoInOut});
-
-			/*logoBl.angle = -4;
-
-			new FlxTimer().start(0.0005, function(tmr:FlxTimer)
-			{
-				if(logoBl.angle == -4) 
-					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
-				if (logoBl.angle == 4) 
-					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
-			}, 0);*/
-
 			skippedIntro = true;
 		}
 	}
